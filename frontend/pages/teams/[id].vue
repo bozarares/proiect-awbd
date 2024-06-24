@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto">
       <div v-if="team" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column: Team Details -->
-        <div class="lg:col-span-1 bg-white rounded-lg shadow-md p-6">
+        <div class="lg:col-span-1 bg-white rounded-lg shadow-md p-6 self-start">
           <h1 class="text-3xl font-bold mb-4">{{ team.name }}</h1>
           <p class="text-gray-600 mb-6">{{ team.description }}</p>
           

@@ -3,6 +3,8 @@ package com.example.api.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Comment {
     @Id
@@ -16,6 +18,7 @@ public class Comment {
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "task_id")
     private Task task;
 

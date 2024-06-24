@@ -56,7 +56,7 @@ const login = async () => {
       body: JSON.stringify({ username: username.value, password: password.value })
     })
     userStore.setToken(data.value.token)
-    userStore.setUser({ username: username.value })
+    userStore.setUser(data.value.user)
     router.push('/')
     user.value = data.value
   } catch (error) {

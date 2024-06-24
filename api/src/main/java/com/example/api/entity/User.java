@@ -3,6 +3,8 @@ package com.example.api.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class User {
     @Id
@@ -14,6 +16,7 @@ public class User {
     private String role;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private List<Comment> comments;
 
     // Getters and setters

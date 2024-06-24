@@ -39,7 +39,8 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         final String token = jwtUtil.generateToken(userDetails.getUsername());
-        return ResponseEntity.ok(new AuthResponse(token));
+        final User user = userService.findByUsername(authRequest.getUsername());
+        return ResponseEntity.ok(new AuthResponse(token, user));
     }
 
     @GetMapping("/logout")
