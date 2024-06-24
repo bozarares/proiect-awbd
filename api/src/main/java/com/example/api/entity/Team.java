@@ -15,10 +15,14 @@ public class Team {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "team")
     private List<TeamMember> teamMembers;
 
+    @OneToMany(mappedBy = "team")
+    private List<Project> projects;
+
     // Getters and setters
+
     public Long getId() {
         return id;
     }
@@ -57,5 +61,13 @@ public class Team {
 
     public void setTeamMembers(List<TeamMember> teamMembers) {
         this.teamMembers = teamMembers;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

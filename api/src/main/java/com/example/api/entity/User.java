@@ -14,12 +14,6 @@ public class User {
     private String role;
 
     @OneToMany(mappedBy = "user")
-    private List<Task> tasks;
-
-    @OneToMany(mappedBy = "user")
-    private List<Project> projects;
-
-    @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
     // Getters and setters
@@ -62,22 +56,6 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
     }
 
     public List<Comment> getComments() {

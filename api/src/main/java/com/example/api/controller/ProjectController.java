@@ -3,9 +3,11 @@ package com.example.api.controller;
 import com.example.api.entity.Project;
 import com.example.api.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -20,8 +22,13 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public Project getProjectById(@PathVariable Long id) {
-        return projectService.getProjectById(id);
+    public ResponseEntity<?> getProjectById(@PathVariable Long id) {
+        Optional<Project> project = projectService.getProjectById(id);
+        if (project.isPresent()) {
+            return ResponseEntity.ok(project.get());
+        } else {
+            return ResponseEntity.status(403).body("{\"error\": \"You are not a team member\"}");
+        }
     }
 
     @PostMapping
