@@ -1,6 +1,6 @@
 package com.example.api.service;
 
-import com.example.api.model.Label;
+import com.example.api.entity.Label;
 import com.example.api.repository.LabelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

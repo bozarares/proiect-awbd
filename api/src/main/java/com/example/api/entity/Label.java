@@ -1,6 +1,6 @@
-package com.example.api.model;
+package com.example.api.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity

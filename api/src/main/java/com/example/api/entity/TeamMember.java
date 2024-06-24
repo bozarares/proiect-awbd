@@ -1,6 +1,7 @@
-package com.example.api.model;
+package com.example.api.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class TeamMember {
@@ -10,6 +11,7 @@ public class TeamMember {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @JsonBackReference
     private Team team;
 
     @ManyToOne
@@ -17,7 +19,6 @@ public class TeamMember {
     private User user;
 
     // Getters and setters
-
     public Long getId() {
         return id;
     }

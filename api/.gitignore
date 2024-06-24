@@ -1,33 +1,75 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Exclude directory specific files
+.DS_Store
+Thumbs.db
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Exclude build directories
+/target/
+/out/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Exclude IDE specific directories
+/.idea/
+/*.iml
+/*.ipr
+/.vscode/
+/*.sublime-workspace
+/.settings/
+/*.metadata
+/bin/
+/.classpath
+/.project
+/.springBeans
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Logs
+logs/
+*.log
 
-### VS Code ###
-.vscode/
+# Temporary files
+*.tmp
+*.swp
+
+# Maven
+/.mvn/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/logs
+/target/
+/release.properties
+/DependencyAnalysis/
+*.jar
+*.war
+
+# IntelliJ IDEA
+/.idea/
+/*.iws
+/*.iml
+/*.ipr
+/out/
+!out/logs/
+
+# STS
+/.springBeans
+
+# Eclipse
+/.metadata
+/.classpath
+/.project
+/.settings
+/.factorypath
+
+# VS Code
+/.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Exclude application properties
+/src/main/resources/application.properties
+/src/main/resources/application-dev.properties
+/src/main/resources/application-prod.properties
+/src/main/resources/application-test.properties
+
+# Others
+*.bak
+*.tmp

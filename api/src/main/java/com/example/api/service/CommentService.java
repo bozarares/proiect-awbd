@@ -1,6 +1,6 @@
 package com.example.api.service;
 
-import com.example.api.model.Comment;
+import com.example.api.entity.Comment;
 import com.example.api.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,8 @@ public class CommentService {
         if (comment != null) {
             comment.setContent(commentDetails.getContent());
             comment.setCreatedDate(commentDetails.getCreatedDate());
+            comment.setUser(commentDetails.getUser());
+            comment.setTask(commentDetails.getTask());
             return commentRepository.save(comment);
         }
         return null;

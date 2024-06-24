@@ -1,6 +1,6 @@
 package com.example.api.service;
 
-import com.example.api.model.Task;
+import com.example.api.entity.Task;
 import com.example.api.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

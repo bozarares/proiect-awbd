@@ -1,6 +1,6 @@
 package com.example.api.service;
 
-import com.example.api.model.Project;
+import com.example.api.entity.Project;
 import com.example.api.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

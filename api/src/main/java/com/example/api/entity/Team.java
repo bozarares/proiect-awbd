@@ -1,28 +1,24 @@
-package com.example.api.model;
+package com.example.api.entity;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class Project {
+public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "project")
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<TeamMember> teamMembers;
 
     // Getters and setters
-
     public Long getId() {
         return id;
     }
@@ -47,22 +43,6 @@ public class Project {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
     public User getUser() {
         return user;
     }
@@ -71,11 +51,11 @@ public class Project {
         this.user = user;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public List<TeamMember> getTeamMembers() {
+        return teamMembers;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setTeamMembers(List<TeamMember> teamMembers) {
+        this.teamMembers = teamMembers;
     }
 }
