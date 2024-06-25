@@ -38,4 +38,31 @@ public class TeamMemberController {
     public void deleteTeamMember(@PathVariable Long id) {
         teamMemberService.deleteTeamMember(id);
     }
+
+    @PostMapping("/addByEmail")
+    public TeamMember addTeamMemberByEmail(@RequestBody AddTeamMemberRequest request) {
+        return teamMemberService.addTeamMemberByEmail(request.getTeamId(), request.getEmail());
+    }
+}
+
+class AddTeamMemberRequest {
+    private Long teamId;
+    private String email;
+
+    // Getters and setters
+    public Long getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Long teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
