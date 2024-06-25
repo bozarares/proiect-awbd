@@ -10,6 +10,22 @@
           <p class="text-gray-500 mb-2">Due Date: {{ new Date(task.dueDate).toLocaleDateString() }}</p>
           <p class="text-gray-500 mb-2">Priority: {{ task.priority }}</p>
           <p class="text-gray-500 mb-2">Status: {{ task.status }}</p>
+          
+          <!-- Labels Section -->
+          <div class="mt-4">
+            <h2 class="text-2xl font-semibold mb-3">Labels</h2>
+            <div class="flex flex-wrap mb-4">
+              <span v-for="label in task.labels" :key="label.id" :style="{ backgroundColor: label.color }" class="text-white px-3 py-1 rounded-lg mr-2 mb-2">
+                {{ label.name }}
+                <button @click="removeLabel(label.id)" class="ml-2 text-red-500 hover:text-red-700">x</button>
+              </span>
+            </div>
+            <form @submit.prevent="addLabel" class="flex items-center">
+              <input v-model="newLabelName" placeholder="Label Name" required class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 mr-2"/>
+              <input v-model="newLabelColor" type="color" required class="h-10 w-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 mr-2"/>
+              <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Add Label</button>
+            </form>
+          </div>
         </div>
 
         <!-- Right Column: Comments -->
@@ -53,6 +69,9 @@ const task = ref(null)
 const userStore = useUserStore()
 const taskId = route.params.id
 const commentText = ref('')
+
+const newLabelName = ref('')
+const newLabelColor = ref('#000000')
 
 onMounted(async () => {
   const { data, error } = await useMyFetch(`/tasks/${route.params.id}`, {
@@ -113,5 +132,54 @@ const deleteComment = async (commentId) => {
     console.error('Fetch error: ', error)
   }
 }
+
+const addLabel = async () => {
+  try {
+    const { data, error } = await useMyFetch('/labels', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: newLabelName.value,
+        color: newLabelColor.value,
+        task: { id: taskId }
+      })
+    })
+
+    if (error.value) {
+      console.error(error.value)
+    } else {
+      task.value.labels.push(data.value)
+      newLabelName.value = ''
+      newLabelColor.value = '#000000'
+    }
+  } catch (error) {
+    console.error('Fetch error: ', error)
+  }
+}
+
+const removeLabel = async (labelId) => {
+  try {
+    const { error } = await useMyFetch(`/labels/${labelId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`
+      }
+    })
+
+    if (error.value) {
+      console.error(error.value)
+    } else {
+      task.value.labels = task.value.labels.filter(label => label.id !== labelId)
+    }
+  } catch (error) {
+    console.error('Fetch error: ', error)
+  }
+}
 </script>
 
+<style scoped>
+/* Custom styles here if needed */
+</style>

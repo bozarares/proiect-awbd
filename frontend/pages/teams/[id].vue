@@ -10,9 +10,17 @@
           <h2 class="text-2xl font-semibold mb-3">Team Members</h2>
           <ul class="list-disc pl-5 mb-6">
             <li v-for="member in team.teamMembers" :key="member.id" class="mb-2">
-              {{ member.user.username }} ({{ member.user.email }})
+              <div class="flex justify-between items-center">
+                <p>{{ member.user.username }} ({{ member.user.email }})</p>
+                <button v-if="team.user.id === userStore.user.id && member.user.id !== userStore.user.id" @click="deleteMember(member.id)" class="text-red-500 hover:text-red-700">Delete</button>
+              </div>
             </li>
           </ul>
+
+          <div class="flex mb-6">
+            <input v-model="email" placeholder="Enter user email" class="border p-2 flex-grow rounded-l-lg" />
+            <button @click="addMemberByEmail" class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-lg">Add</button>
+          </div>
 
           <NuxtLink :to="`/projects/create?teamId=${team.id}`">
             <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Create Project</button>
@@ -49,6 +57,7 @@ import { useMyFetch } from '~/composables/useMyFetch'
 const route = useRoute()
 const team = ref(null)
 const userStore = useUserStore()
+const email = ref('')
 
 onMounted(async () => {
   const { data, error } = await useMyFetch(`/teams/${route.params.id}`, {
@@ -63,8 +72,47 @@ onMounted(async () => {
     team.value = data.value
   }
 })
-</script>
 
-<style scoped>
-/* Custom styles here if needed */
-</style>
+const deleteMember = async (memberId) => {
+  try {
+    const { error } = await useMyFetch(`/teamMembers/${memberId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`
+      }
+    })
+
+    if (error.value) {
+      console.error(error.value)
+    } else {
+      // Actualizează starea echipei după ștergerea unui membru
+      const updatedTeamMembers = team.value.teamMembers.filter(member => member.id !== memberId)
+      team.value = { ...team.value, teamMembers: updatedTeamMembers }
+    }
+  } catch (error) {
+    console.error('Fetch error: ', error)
+  }
+}
+
+const addMemberByEmail = async () => {
+  try {
+    const { data, error } = await useMyFetch(`/teamMembers/addByEmail`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ teamId: team.value.id, email: email.value })
+    })
+
+    if (error.value) {
+      console.error(error.value)
+    } else {
+      team.value.teamMembers.push(data.value)
+      email.value = ''
+    }
+  } catch (error) {
+    console.error('Fetch error: ', error)
+  }
+}
+</script>
