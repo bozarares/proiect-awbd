@@ -1,10 +1,20 @@
 <template>
-  <div class="py-8 bg-gray-100 min-h-screen px-12">
+  <div class="py-8 bg-gray-100 min-h-screen px-4 md:px-12">
     <div class="max-w-7xl mx-auto">
-      <div v-if="team" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div v-if="pending" class="text-center">
+        <p>Loading...</p>
+      </div>
+      <div v-else-if="team" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column: Team Details -->
         <div class="lg:col-span-1 bg-white rounded-lg shadow-md p-6 self-start">
-          <h1 class="text-3xl font-bold mb-4">{{ team.name }}</h1>
+          <div class="flex items-center justify-between mb-4 gap-8">
+            <h1 class="text-3xl font-bold">{{ team.name }}</h1>
+            <NuxtLink :to="`/teams/${team.id}/edit`">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">
+                Edit
+              </button>
+            </NuxtLink>
+          </div>
           <p class="text-gray-600 mb-6">{{ team.description }}</p>
           
           <h2 class="text-2xl font-semibold mb-3">Team Members</h2>
@@ -42,36 +52,36 @@
         </div>
       </div>
       <div v-else class="text-center">
-        <p>Loading...</p>
+        <p>No team data available.</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '~/stores/user'
-import { useMyFetch } from '~/composables/useMyFetch'
+import { useAsyncData } from '#app'
 
 const route = useRoute()
-const team = ref(null)
 const userStore = useUserStore()
 const email = ref('')
 
-onMounted(async () => {
-  const { data, error } = await useMyFetch(`/teams/${route.params.id}`, {
-    headers: {
-      'Authorization': `Bearer ${userStore.token}`
+const { data: team, pending, error } = await useAsyncData(
+  `team-${route.params.id}`,
+  async () => {
+    const { data, error } = await useMyFetch(`/teams/${route.params.id}`, {
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`
+      }
+    })
+    if (error.value) {
+      throw new Error('Error fetching team data')
     }
-  })
-
-  if (error.value) {
-    console.error(error.value)
-  } else {
-    team.value = data.value
+    return data.value
   }
-})
+)
 
 const deleteMember = async (memberId) => {
   try {
@@ -83,14 +93,14 @@ const deleteMember = async (memberId) => {
     })
 
     if (error.value) {
-      console.error(error.value)
+      console.error('Error deleting member:', error.value)
     } else {
-      // Actualizează starea echipei după ștergerea unui membru
+      // Update the team state after deleting a member
       const updatedTeamMembers = team.value.teamMembers.filter(member => member.id !== memberId)
       team.value = { ...team.value, teamMembers: updatedTeamMembers }
     }
   } catch (error) {
-    console.error('Fetch error: ', error)
+    console.error('Fetch error:', error)
   }
 }
 
@@ -106,13 +116,17 @@ const addMemberByEmail = async () => {
     })
 
     if (error.value) {
-      console.error(error.value)
+      console.error('Error adding member by email:', error.value)
     } else {
       team.value.teamMembers.push(data.value)
       email.value = ''
     }
   } catch (error) {
-    console.error('Fetch error: ', error)
+    console.error('Fetch error:', error)
   }
 }
 </script>
+
+<style scoped>
+/* Custom styles here if needed */
+</style>

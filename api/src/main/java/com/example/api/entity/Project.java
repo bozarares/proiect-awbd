@@ -1,6 +1,7 @@
 package com.example.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,9 +18,10 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({ "projects", "name", "description", "user", "teamMembers" })
     private Team team;
 
+    @JsonIgnoreProperties({ "comments", "labels" })
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 

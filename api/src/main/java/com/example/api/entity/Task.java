@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 @Entity
 public class Task {
@@ -20,7 +20,7 @@ public class Task {
     private String status;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIncludeProperties("id")
     @JoinColumn(name = "project_id")
     private Project project;
 

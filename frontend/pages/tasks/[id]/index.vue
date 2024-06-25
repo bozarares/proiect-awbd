@@ -1,10 +1,20 @@
 <template>
   <div class="py-8 bg-gray-100 min-h-screen px-4 md:px-12">
     <div class="max-w-7xl mx-auto">
-      <div v-if="task" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div v-if="pending" class="text-center">
+        <p>Loading...</p>
+      </div>
+      <div v-else-if="task" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column: Task Details -->
         <div class="lg:col-span-1 bg-white rounded-lg shadow-md p-6 self-start">
-          <h1 class="text-3xl font-bold mb-4">{{ task.title }}</h1>
+          <div class="flex items-center justify-between mb-4 gap-8">
+            <h1 class="text-3xl font-bold">{{ task.title }}</h1>
+            <NuxtLink :to="`/tasks/${taskId}/edit`">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">
+                Edit
+              </button>
+            </NuxtLink>
+          </div>
           <p class="text-gray-600 mb-4">{{ task.description }}</p>
           <p class="text-gray-500 mb-2">Created Date: {{ new Date(task.createdDate).toLocaleDateString() }}</p>
           <p class="text-gray-500 mb-2">Due Date: {{ new Date(task.dueDate).toLocaleDateString() }}</p>
@@ -54,20 +64,19 @@
         </div>
       </div>
       <div v-else class="text-center">
-        <p>Loading...</p>
+        <p>No task data available.</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '~/stores/user'
-import { useMyFetch } from '~/composables/useMyFetch'
+import { useAsyncData } from '#app'
 
 const route = useRoute()
-const task = ref(null)
 const userStore = useUserStore()
 const taskId = route.params.id
 const commentText = ref('')
@@ -75,18 +84,20 @@ const commentText = ref('')
 const newLabelName = ref('')
 const newLabelColor = ref('#000000')
 
-onMounted(async () => {
-  const { data, error } = await useMyFetch(`/tasks/${route.params.id}`, {
-    headers: {
-      'Authorization': `Bearer ${userStore.token}`
+const { data: task, pending, error } = await useAsyncData(`task-${taskId}`, async () => {
+  if (userStore.token) {
+    const { data, error } = await useMyFetch(`/tasks/${taskId}`, {
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`
+      }
+    })
+    if (error.value) {
+      console.error('Error fetching task data:', error.value)
+      throw new Error('Error fetching task data')
     }
-  })
-
-  if (error.value) {
-    console.error(error.value)
-  } else {
-    task.value = data.value
+    return data.value
   }
+  return null
 })
 
 const addComment = async () => {
@@ -112,7 +123,7 @@ const addComment = async () => {
       commentText.value = ''
     }
   } catch (error) {
-    console.error('Fetch error: ', error)
+    console.error('Fetch error:', error)
   }
 }
 
@@ -131,7 +142,7 @@ const deleteComment = async (commentId) => {
       task.value.comments = task.value.comments.filter(comment => comment.id !== commentId)
     }
   } catch (error) {
-    console.error('Fetch error: ', error)
+    console.error('Fetch error:', error)
   }
 }
 
@@ -158,10 +169,9 @@ const addLabel = async () => {
       newLabelColor.value = '#000000'
     }
   } catch (error) {
-    console.error('Fetch error: ', error)
+    console.error('Fetch error:', error)
   }
 }
-
 
 const removeLabel = async (labelId) => {
   try {
@@ -178,7 +188,7 @@ const removeLabel = async (labelId) => {
       task.value.labels = task.value.labels.filter(label => label.id !== labelId)
     }
   } catch (error) {
-    console.error('Fetch error: ', error)
+    console.error('Fetch error:', error)
   }
 }
 </script>
