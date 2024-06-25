@@ -27,10 +27,10 @@
             </li>
           </ul>
 
-          <div class="flex mb-6">
-            <input v-model="email" placeholder="Enter user email" class="border p-2 flex-grow rounded-l-lg" />
-            <button @click="addMemberByEmail" class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-lg">Add</button>
-          </div>
+          <form @submit.prevent="addMemberByEmail" class="flex mb-6">
+            <input required v-model="email" placeholder="Enter user email" class="border p-2 flex-grow rounded-l-lg" />
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-lg">Add</button>
+          </form>
 
           <NuxtLink :to="`/projects/create?teamId=${team.id}`">
             <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Create Project</button>

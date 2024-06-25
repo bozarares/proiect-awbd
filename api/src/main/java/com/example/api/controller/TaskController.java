@@ -2,6 +2,9 @@ package com.example.api.controller;
 
 import com.example.api.entity.Task;
 import com.example.api.service.TaskService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +28,12 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
+    public Task createTask(@RequestBody @Valid Task task) {
         return taskService.createTask(task);
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task taskDetails) {
+    public Task updateTask(@PathVariable Long id, @RequestBody @Valid Task taskDetails) {
         return taskService.updateTask(id, taskDetails);
     }
 

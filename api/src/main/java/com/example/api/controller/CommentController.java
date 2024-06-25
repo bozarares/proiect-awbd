@@ -2,10 +2,14 @@ package com.example.api.controller;
 
 import com.example.api.entity.Comment;
 import com.example.api.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -15,8 +19,9 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping
-    public List<Comment> getAllComments() {
-        return commentService.getAllComments();
+    public Page<Comment> getAllComments(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return commentService.getAllComments(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate")));
     }
 
     @GetMapping("/{id}")
@@ -24,13 +29,21 @@ public class CommentController {
         return commentService.getCommentById(id);
     }
 
+    @GetMapping("/task/{taskId}")
+    public Page<Comment> getTaskComments(@PathVariable Long taskId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return commentService.getTaskComments(taskId,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
     @PostMapping
-    public Comment createComment(@RequestBody Comment comment) {
+    public Comment createComment(@RequestBody @Valid Comment comment) {
         return commentService.createComment(comment);
     }
 
     @PutMapping("/{id}")
-    public Comment updateComment(@PathVariable Long id, @RequestBody Comment commentDetails) {
+    public Comment updateComment(@PathVariable Long id, @RequestBody @Valid Comment commentDetails) {
         return commentService.updateComment(id, commentDetails);
     }
 

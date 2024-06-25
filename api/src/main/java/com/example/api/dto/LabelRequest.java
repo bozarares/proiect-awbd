@@ -1,5 +1,5 @@
 // LabelRequest.java
-package com.example.api.controller;
+package com.example.api.dto;
 
 public class LabelRequest {
     private String name;

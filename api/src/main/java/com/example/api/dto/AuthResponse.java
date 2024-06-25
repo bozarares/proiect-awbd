@@ -1,4 +1,6 @@
-package com.example.api.entity;
+package com.example.api.dto;
+
+import com.example.api.entity.User;
 
 public class AuthResponse {
     private String token;

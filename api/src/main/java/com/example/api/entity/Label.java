@@ -1,6 +1,8 @@
 package com.example.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -10,7 +12,11 @@ public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name Date is required")
     private String name;
+
+    @NotBlank(message = "Color Date is required")
     private String color;
 
     @JsonBackReference

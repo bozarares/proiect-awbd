@@ -1,7 +1,11 @@
-package com.example.api.controller;
+package com.example.api.dto;
+
+import jakarta.validation.constraints.NotBlank;
 
 public class AddMemberRequest {
     private Long teamId;
+
+    @NotBlank(message = "Email Date is required")
     private String email;
 
     // Getters and setters

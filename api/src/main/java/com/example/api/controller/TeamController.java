@@ -2,6 +2,9 @@ package com.example.api.controller;
 
 import com.example.api.entity.Team;
 import com.example.api.service.TeamService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +35,12 @@ public class TeamController {
     }
 
     @PostMapping
-    public Team createTeam(@RequestBody Team team) {
+    public Team createTeam(@Valid @RequestBody Team team) {
         return teamService.createTeam(team);
     }
 
     @PutMapping("/{id}")
-    public Team updateTeam(@PathVariable Long id, @RequestBody Team teamDetails) {
+    public Team updateTeam(@PathVariable Long id, @RequestBody @Valid Team teamDetails) {
         return teamService.updateTeam(id, teamDetails);
     }
 

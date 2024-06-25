@@ -3,9 +3,9 @@ package com.example.api.service;
 import com.example.api.entity.Comment;
 import com.example.api.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CommentService {
@@ -13,12 +13,16 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public Page<Comment> getAllComments(Pageable pageable) {
+        return commentRepository.findAll(pageable);
     }
 
     public Comment getCommentById(Long id) {
         return commentRepository.findById(id).orElse(null);
+    }
+
+    public Page<Comment> getTaskComments(Long taskId, Pageable pageable) {
+        return commentRepository.findByTaskId(taskId, pageable);
     }
 
     public Comment createComment(Comment comment) {

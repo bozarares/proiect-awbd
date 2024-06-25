@@ -1,7 +1,7 @@
 <template>
   <div class="py-8 bg-gray-100 min-h-screen px-4 md:px-12">
     <div class="max-w-7xl mx-auto">
-      <div v-if="pending" class="text-center">
+      <div v-if="pendingTask || pendingComments" class="text-center">
         <p>Loading...</p>
       </div>
       <div v-else-if="task" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -51,7 +51,7 @@
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Send</button>
           </form>
           <ul class="list-disc pl-5">
-            <li v-for="comment in task.comments" :key="comment.id" class="mb-4 flex justify-between">
+            <li v-for="comment in comments" :key="comment.id" class="mb-4 flex justify-between">
               <div>
                 <p class="text-gray-700"><strong>{{ comment.user.username }}:</strong> {{ comment.content }}</p>
                 <p class="text-gray-500">{{ new Date(comment.createdDate).toLocaleDateString() }}</p>
@@ -61,6 +61,7 @@
               </div>
             </li>
           </ul>
+          <button v-if="comments.length < totalComments" @click="loadMoreComments" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full mt-4">Load More</button>
         </div>
       </div>
       <div v-else class="text-center">
@@ -71,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '~/stores/user'
 import { useAsyncData } from '#app'
@@ -83,8 +84,12 @@ const commentText = ref('')
 
 const newLabelName = ref('')
 const newLabelColor = ref('#000000')
+const comments = ref([])
+const totalComments = ref(0)
+const currentPage = ref(0)
 
-const { data: task, pending, error } = await useAsyncData(`task-${taskId}`, async () => {
+// Fetching task data
+const { data: task, pending: pendingTask, error: errorTask } = await useAsyncData(`task-${taskId}`, async () => {
   if (userStore.token) {
     const { data, error } = await useMyFetch(`/tasks/${taskId}`, {
       headers: {
@@ -93,12 +98,59 @@ const { data: task, pending, error } = await useAsyncData(`task-${taskId}`, asyn
     })
     if (error.value) {
       console.error('Error fetching task data:', error.value)
-      throw new Error('Error fetching task data')
+      return {}
     }
-    return data.value
+    return data.value ?? {}
   }
-  return null
+  return {}
 })
+
+// Fetching initial comments data
+const { data: initialCommentData, pending: pendingComments, error: errorComments } = await useAsyncData(
+  `comments-task-${taskId}-page-0`,
+  async () => {
+    if (userStore.token) {
+      const { data, error } = await useMyFetch(`/comments/task/${taskId}?page=0&size=5`, {
+        headers: {
+          'Authorization': `Bearer ${userStore.token}`
+        }
+      })
+      if (error.value) {
+        console.error('Error fetching comments:', error.value)
+        return { content: [], totalElements: 0 }
+      }
+      return data.value ?? { content: [], totalElements: 0 }
+    }
+    return { content: [], totalElements: 0 }
+  }
+)
+
+// Handling initial comments loading
+if (initialCommentData.value) {
+  comments.value = initialCommentData.value.content
+  totalComments.value = initialCommentData.value.totalElements
+  currentPage.value = 1
+}
+
+// Function to load more comments
+const loadMoreComments = async () => {
+  try {
+    const { data, error } = await useMyFetch(`/comments/task/${taskId}?page=${currentPage.value}&size=5`, {
+      headers: {
+        'Authorization': `Bearer ${userStore.token}`
+      }
+    })
+    if (error.value) {
+      console.error('Error fetching comments:', error.value)
+    } else {
+      comments.value = [...comments.value, ...data.value.content]
+      totalComments.value = data.value.totalElements
+      currentPage.value += 1
+    }
+  } catch (error) {
+    console.error('Fetch error:', error)
+  }
+}
 
 const addComment = async () => {
   try {
@@ -119,7 +171,7 @@ const addComment = async () => {
     if (error.value) {
       console.error(error.value)
     } else {
-      task.value.comments.push(data.value)
+      comments.value.push(data.value)
       commentText.value = ''
     }
   } catch (error) {
@@ -139,7 +191,8 @@ const deleteComment = async (commentId) => {
     if (error.value) {
       console.error(error.value)
     } else {
-      task.value.comments = task.value.comments.filter(comment => comment.id !== commentId)
+      comments.value = comments.value.filter(comment => comment.id !== commentId)
+      totalComments.value -= 1
     }
   } catch (error) {
     console.error('Fetch error:', error)
@@ -192,7 +245,3 @@ const removeLabel = async (labelId) => {
   }
 }
 </script>
-
-<style scoped>
-/* Custom styles here if needed */
-</style>

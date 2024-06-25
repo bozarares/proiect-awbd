@@ -2,6 +2,9 @@ package com.example.api.controller;
 
 import com.example.api.entity.Project;
 import com.example.api.service.ProjectService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +35,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
+    public Project createProject(@RequestBody @Valid Project project) {
         return projectService.createProject(project);
     }
 
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable Long id, @RequestBody Project projectDetails) {
+    public Project updateProject(@PathVariable Long id, @RequestBody @Valid Project projectDetails) {
         return projectService.updateProject(id, projectDetails);
     }
 

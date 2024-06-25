@@ -1,10 +1,14 @@
 package com.example.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 @Entity
@@ -12,11 +16,23 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Title is required")
     private String title;
+
+    @NotBlank(message = "Description is required")
     private String description;
+
+    @NotNull(message = "Created Date is required")
     private LocalDate createdDate;
+
+    @NotNull(message = "Due Date is required")
     private LocalDate dueDate;
+
+    @NotBlank(message = "Priority Date is required")
     private String priority;
+
+    @NotBlank(message = "Status Date is required")
     private String status;
 
     @ManyToOne
@@ -24,6 +40,7 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "task")
     private List<Comment> comments;
 

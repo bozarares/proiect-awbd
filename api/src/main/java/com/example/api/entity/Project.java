@@ -3,6 +3,9 @@ package com.example.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,9 +14,17 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Description is required")
     private String description;
+
+    @NotNull(message = "Start Date is required")
     private LocalDate startDate;
+
+    @NotNull(message = "End Date is required")
     private LocalDate endDate;
 
     @ManyToOne

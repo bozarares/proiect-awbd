@@ -1,9 +1,13 @@
 package com.example.api.controller;
 
+import com.example.api.dto.AuthRequest;
+import com.example.api.dto.AuthResponse;
 import com.example.api.entity.User;
-import com.example.api.entity.AuthResponse;
 import com.example.api.service.UserService;
 import com.example.api.util.JwtUtil;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> createAuthenticationToken(@RequestBody AuthRequest authRequest)
+    public ResponseEntity<AuthResponse> createAuthenticationToken(@RequestBody @Valid AuthRequest authRequest)
             throws Exception {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -47,27 +51,5 @@ public class AuthController {
     public String logout() {
         SecurityContextHolder.clearContext();
         return "Logged out successfully";
-    }
-}
-
-class AuthRequest {
-    private String username;
-    private String password;
-
-    // Getters and setters
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

@@ -1,9 +1,13 @@
 package com.example.api.controller;
 
+import com.example.api.dto.LabelRequest;
 import com.example.api.entity.Label;
 import com.example.api.entity.Task;
 import com.example.api.service.LabelService;
 import com.example.api.service.TaskService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +34,7 @@ public class LabelController {
     }
 
     @PostMapping
-    public Label createLabel(@RequestBody LabelRequest labelRequest) {
+    public Label createLabel(@RequestBody @Valid LabelRequest labelRequest) {
         Label label = new Label();
         label.setName(labelRequest.getName());
         label.setColor(labelRequest.getColor());
@@ -54,7 +58,7 @@ public class LabelController {
     }
 
     @PutMapping("/{id}")
-    public Label updateLabel(@PathVariable Long id, @RequestBody Label labelDetails) {
+    public Label updateLabel(@PathVariable Long id, @RequestBody @Valid Label labelDetails) {
         return labelService.updateLabel(id, labelDetails);
     }
 
