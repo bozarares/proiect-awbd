@@ -3,6 +3,8 @@ package com.example.api.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Label {
     @Id
@@ -11,6 +13,7 @@ public class Label {
     private String name;
     private String color;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "labels")
     private List<Task> tasks;
 

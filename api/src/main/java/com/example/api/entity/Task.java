@@ -3,6 +3,7 @@ package com.example.api.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -28,7 +29,7 @@ public class Task {
 
     @ManyToMany
     @JoinTable(name = "task_label", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "label_id"))
-    private List<Label> labels;
+    private List<Label> labels = new ArrayList<>();
 
     // Getters and setters
 

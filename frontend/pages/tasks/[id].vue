@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 bg-gray-100 min-h-screen px-12">
+  <div class="py-8 bg-gray-100 min-h-screen px-4 md:px-12">
     <div class="max-w-7xl mx-auto">
       <div v-if="task" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column: Task Details -->
@@ -20,9 +20,11 @@
                 <button @click="removeLabel(label.id)" class="ml-2 text-red-500 hover:text-red-700">x</button>
               </span>
             </div>
-            <form @submit.prevent="addLabel" class="flex items-center">
-              <input v-model="newLabelName" placeholder="Label Name" required class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 mr-2"/>
-              <input v-model="newLabelColor" type="color" required class="h-10 w-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 mr-2"/>
+            <form @submit.prevent="addLabel" class="flex flex-col space-y-4">
+              <div class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
+                <input v-model="newLabelName" placeholder="Label Name" required class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 w-full md:w-auto"/>
+                <input v-model="newLabelColor" type="color" required class="h-10 w-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"/>
+              </div>
               <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Add Label</button>
             </form>
           </div>
@@ -144,7 +146,7 @@ const addLabel = async () => {
       body: JSON.stringify({
         name: newLabelName.value,
         color: newLabelColor.value,
-        task: { id: taskId }
+        taskId: taskId
       })
     })
 
@@ -159,6 +161,7 @@ const addLabel = async () => {
     console.error('Fetch error: ', error)
   }
 }
+
 
 const removeLabel = async (labelId) => {
   try {

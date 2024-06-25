@@ -1,7 +1,9 @@
 package com.example.api.controller;
 
 import com.example.api.entity.Label;
+import com.example.api.entity.Task;
 import com.example.api.service.LabelService;
+import com.example.api.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,9 @@ public class LabelController {
     @Autowired
     private LabelService labelService;
 
+    @Autowired
+    private TaskService taskService;
+
     @GetMapping
     public List<Label> getAllLabels() {
         return labelService.getAllLabels();
@@ -25,8 +30,27 @@ public class LabelController {
     }
 
     @PostMapping
-    public Label createLabel(@RequestBody Label label) {
-        return labelService.createLabel(label);
+    public Label createLabel(@RequestBody LabelRequest labelRequest) {
+        Label label = new Label();
+        label.setName(labelRequest.getName());
+        label.setColor(labelRequest.getColor());
+
+        Label createdLabel = labelService.createLabel(label);
+
+        Long taskId = labelRequest.getTaskId();
+        if (taskId != null) {
+            Task existingTask = taskService.getTaskById(taskId);
+            if (existingTask != null) {
+                existingTask.getLabels().add(createdLabel);
+                taskService.updateTask(existingTask.getId(), existingTask);
+            } else {
+                throw new IllegalArgumentException("Task not found for id: " + taskId);
+            }
+        } else {
+            throw new IllegalArgumentException("TaskId must not be null");
+        }
+
+        return createdLabel;
     }
 
     @PutMapping("/{id}")
