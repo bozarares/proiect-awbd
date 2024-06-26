@@ -93,4 +93,17 @@ public class TeamService {
     public void deleteTeam(Long id) {
         teamRepository.deleteById(id);
     }
+
+    // Setters for testing
+    public void setTeamRepository(TeamRepository teamRepository) {
+        this.teamRepository = teamRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setTeamMemberRepository(TeamMemberRepository teamMemberRepository) {
+        this.teamMemberRepository = teamMemberRepository;
+    }
 }
