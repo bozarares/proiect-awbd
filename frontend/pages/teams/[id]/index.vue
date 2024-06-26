@@ -1,5 +1,6 @@
 <template>
   <div class="py-8 bg-gray-100 min-h-screen px-4 md:px-12">
+    <button @click="goBack" class="text-sm">Go Back</button>
     <div class="max-w-7xl mx-auto">
       <div v-if="pending" class="text-center">
         <p>Loading...</p>
@@ -60,14 +61,17 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import { useUserStore } from '~/stores/user'
 import { useAsyncData } from '#app'
 
 const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
 const email = ref('')
-
+const goBack = () => {
+  router.push(`/teams`);
+};
 const { data: team, pending, error } = await useAsyncData(
   `team-${route.params.id}`,
   async () => {

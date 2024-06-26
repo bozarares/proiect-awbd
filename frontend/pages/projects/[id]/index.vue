@@ -1,5 +1,6 @@
 <template>
   <div class="py-8 bg-gray-100 min-h-screen px-12">
+    <button @click="goBack" class="text-sm">Go Back</button>
     <div class="max-w-7xl mx-auto">
       <div v-if="pending" class="text-center">
         <p>Loading...</p>
@@ -68,8 +69,16 @@ import { useRoute } from 'vue-router';
 import { useUserStore } from '~/stores/user';
 
 const route = useRoute();
+const router = useRouter()
 const userStore = useUserStore();
 const projectId = route.params.id;
+
+const goBack = () => {
+  const teamId = project.value?.team?.id
+  if (teamId) {
+    router.push(`/teams/${teamId}`)
+  }
+}
 
 const { data: project, pending, error } = await useAsyncData(`project-${projectId}`, async () => {
   if (userStore.token) {

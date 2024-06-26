@@ -1,5 +1,6 @@
 <template>
   <div class="p-8 bg-gray-100 min-h-screen">
+    <button @click="goBack" class="text-sm">Go Back</button>
     <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
       <h1 class="text-2xl font-bold mb-6">Edit Task</h1>
       <form @submit.prevent="editTask">
@@ -64,6 +65,10 @@ const status = ref('')
 
 const taskId = route.params.id
 const projectId = ref(null)
+
+const goBack = () => {
+  router.push(`/tasks/${taskId}`);
+};
 
 // Fetch task data using useAsyncData
 const { data: task, pending, error } = await useAsyncData(`task-${taskId}`, async () => {

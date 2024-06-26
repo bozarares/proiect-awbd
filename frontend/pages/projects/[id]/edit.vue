@@ -1,5 +1,6 @@
 <template>
   <div class="p-8 bg-gray-100 min-h-screen">
+    <button @click="goBack" class="text-sm">Go Back</button>
     <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
       <h1 class="text-2xl font-bold mb-6">Edit Project</h1>
       <form @submit.prevent="updateProject">
@@ -41,6 +42,9 @@ const name = ref('')
 const description = ref('')
 const startDate = ref('')
 const endDate = ref('')
+const goBack = () => {
+  router.push(`/projects/${projectId}`);
+};
 
 // Fetch project data using useAsyncData
 const { data: project, pending, error } = await useAsyncData(`project-${projectId}`, async () => {

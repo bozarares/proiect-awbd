@@ -24,7 +24,7 @@ const logout = () => {
         <span class="text-sm">Welcome, {{ userStore.user.username }}</span>
         <button @click="logout" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition duration-300">Logout</button>
       </div>
-      <div v-else class="flex items-center space-x-4"><NuxtLink v-if="!userStore.token" href="/login" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition duration-300">Login</NuxtLink></div>
+      <div v-else class="flex items-center space-x-4"><NuxtLink v-if="!userStore.token" href="/login" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition duration-300">Login</NuxtLink><NuxtLink v-if="!userStore.token" href="/register" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition duration-300">Register</NuxtLink></div>
     </nav>
 
     <!-- Main Content -->

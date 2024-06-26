@@ -1,5 +1,11 @@
 <template>
-  <div class="p-8 bg-gray-100 min-h-screen">
+  <div class="p-8 bg-gray-100 min-h-screen relative">
+    <button 
+      @click="goBack" 
+      class="text-sm"
+    >
+      Go Back
+    </button>
     <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
       <h1 class="text-2xl font-bold mb-6">Edit Team</h1>
       <form @submit.prevent="updateTeam">
@@ -72,8 +78,8 @@ const updateTeam = async () => {
     console.error('Fetch error: ', error)
   }
 }
-</script>
 
-<style scoped>
-/* Custom styles here */
-</style>
+const goBack = () => {
+  router.push(`/teams/${route.params.id}`)
+}
+</script>
