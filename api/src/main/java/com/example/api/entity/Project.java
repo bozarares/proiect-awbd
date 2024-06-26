@@ -1,42 +1,49 @@
 package com.example.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 public class Project {
+
+    // ID-ul unic al proiectului
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Numele proiectului
     @NotBlank(message = "Name is required")
     private String name;
 
+    // Descrierea proiectului
     @NotBlank(message = "Description is required")
     private String description;
 
+    // Data de început a proiectului
     @NotNull(message = "Start Date is required")
     private LocalDate startDate;
 
+    // Data de sfârșit a proiectului
     @NotNull(message = "End Date is required")
     private LocalDate endDate;
 
+    // Echipa asociată proiectului (relație ManyToOne)
     @ManyToOne
     @JoinColumn(name = "team_id")
     @JsonIgnoreProperties({ "projects", "name", "description", "user", "teamMembers" })
     private Team team;
 
+    // Task-urile asociate proiectului (relație OneToMany)
     @JsonIgnoreProperties({ "comments", "labels" })
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
-    // Getters and setters
+    // Getteri și setteri
+
     public Long getId() {
         return id;
     }

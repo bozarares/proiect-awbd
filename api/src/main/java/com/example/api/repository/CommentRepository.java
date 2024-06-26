@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
+    // Metodă pentru a găsi comentariile după ID-ul task-ului, cu paginare
     Page<Comment> findByTaskId(Long taskId, Pageable pageable);
 }

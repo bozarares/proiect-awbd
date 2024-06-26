@@ -19,12 +19,14 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    // Constructor pentru injectarea dependințelor
     public SecurityConfig(JwtRequestFilter jwtRequestFilter,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.jwtRequestFilter = jwtRequestFilter;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
+    // Configurarea lanțului de filtre de securitate
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -40,11 +42,13 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Bean pentru encoder-ul de parole
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Bean pentru manager-ul de autentificare
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {

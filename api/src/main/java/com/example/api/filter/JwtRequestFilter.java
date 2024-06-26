@@ -28,25 +28,32 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Lazy
     private UserService userService;
 
+    // Metoda care filtrează fiecare cerere HTTP pentru a valida JWT-ul
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain chain)
-            throws ServletException, IOException {
+            @NonNull FilterChain chain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
         String jwt = null;
 
+        // Verificăm dacă există un header de autorizare și dacă acesta începe cu
+        // "Bearer "
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            jwt = authorizationHeader.substring(7); // Extragem JWT-ul din header
+            username = jwtUtil.extractUsername(jwt); // Extragem username-ul din JWT
         }
 
+        // Verificăm dacă username-ul nu este null și dacă autentificarea nu a fost deja
+        // setată
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userService.loadUserByUsername(username);
 
+            // Validăm token-ul JWT
             if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
+                // Creăm un obiect UsernamePasswordAuthenticationToken și îl setăm în
+                // SecurityContext
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
@@ -54,6 +61,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+        // Continuăm filtrarea cererii
         chain.doFilter(request, response);
     }
 }

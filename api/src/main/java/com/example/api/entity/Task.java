@@ -3,52 +3,61 @@ package com.example.api.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 @Entity
 public class Task {
+
+    // ID-ul unic al task-ului
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Titlul task-ului
     @NotBlank(message = "Title is required")
     private String title;
 
+    // Descrierea task-ului
     @NotBlank(message = "Description is required")
     private String description;
 
+    // Data de creare a task-ului
     @NotNull(message = "Created Date is required")
     private LocalDate createdDate;
 
+    // Data limită a task-ului
     @NotNull(message = "Due Date is required")
     private LocalDate dueDate;
 
+    // Prioritatea task-ului
     @NotBlank(message = "Priority Date is required")
     private String priority;
 
+    // Statusul task-ului
     @NotBlank(message = "Status Date is required")
     private String status;
 
+    // Proiectul asociat task-ului (relație ManyToOne)
     @ManyToOne
     @JsonIncludeProperties("id")
     @JoinColumn(name = "project_id")
     private Project project;
 
+    // Comentariile asociate task-ului (relație OneToMany)
     @JsonBackReference
     @OneToMany(mappedBy = "task")
     private List<Comment> comments;
 
+    // Etichetele asociate task-ului (relație ManyToMany)
     @ManyToMany
     @JoinTable(name = "task_label", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "label_id"))
     private List<Label> labels = new ArrayList<>();
 
-    // Getters and setters
+    // Getteri și setteri
 
     public Long getId() {
         return id;

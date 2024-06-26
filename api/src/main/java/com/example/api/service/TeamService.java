@@ -28,6 +28,7 @@ public class TeamService {
     @Autowired
     private TeamMemberRepository teamMemberRepository;
 
+    // Obține toate echipele utilizatorului autentificat
     public List<Team> getAllTeams() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -39,6 +40,7 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
+    // Obține o echipă după ID dacă utilizatorul este membru al echipei
     public Optional<Team> getTeamById(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -52,34 +54,30 @@ public class TeamService {
         }
     }
 
+    // Creează o nouă echipă și adaugă utilizatorul curent ca membru
     public Team createTeam(Team team) {
-        // Obține utilizatorul autentificat
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User currentUser = userRepository.findByUsername(username);
 
-        // Setează utilizatorul curent ca proprietar al echipei
         team.setUser(currentUser);
 
-        // Salvează echipa
         Team savedTeam = teamRepository.save(team);
 
-        // Creează un membru de echipă pentru utilizatorul curent
         TeamMember teamMember = new TeamMember();
         teamMember.setTeam(savedTeam);
         teamMember.setUser(currentUser);
 
-        // Adaugă membrul de echipă în lista de membri ai echipei
         List<TeamMember> teamMembers = new ArrayList<>();
         teamMembers.add(teamMember);
         savedTeam.setTeamMembers(teamMembers);
 
-        // Salvează membrul de echipă
         teamMemberRepository.save(teamMember);
 
         return savedTeam;
     }
 
+    // Actualizează o echipă existentă
     public Team updateTeam(Long id, Team teamDetails) {
         Team team = teamRepository.findById(id).orElse(null);
         if (team != null) {
@@ -90,11 +88,12 @@ public class TeamService {
         return null;
     }
 
+    // Șterge o echipă după ID
     public void deleteTeam(Long id) {
         teamRepository.deleteById(id);
     }
 
-    // Setters for testing
+    // Setteri pentru testare
     public void setTeamRepository(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
     }

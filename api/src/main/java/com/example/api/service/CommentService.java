@@ -13,22 +13,27 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
+    // Obține toate comentariile cu paginare
     public Page<Comment> getAllComments(Pageable pageable) {
         return commentRepository.findAll(pageable);
     }
 
+    // Obține un comentariu după ID
     public Comment getCommentById(Long id) {
         return commentRepository.findById(id).orElse(null);
     }
 
+    // Obține comentariile asociate unui task specific, cu paginare
     public Page<Comment> getTaskComments(Long taskId, Pageable pageable) {
         return commentRepository.findByTaskId(taskId, pageable);
     }
 
+    // Creează un nou comentariu
     public Comment createComment(Comment comment) {
         return commentRepository.save(comment);
     }
 
+    // Actualizează un comentariu existent
     public Comment updateComment(Long id, Comment commentDetails) {
         Comment comment = commentRepository.findById(id).orElse(null);
         if (comment != null) {
@@ -41,6 +46,7 @@ public class CommentService {
         return null;
     }
 
+    // Șterge un comentariu după ID
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }

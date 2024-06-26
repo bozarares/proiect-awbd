@@ -14,6 +14,7 @@ import java.util.Map;
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    // Metoda care gestionează cererile neautorizate
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException {

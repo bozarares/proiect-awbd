@@ -26,6 +26,7 @@ public class ProjectService {
     @Autowired
     private UserService userService;
 
+    // Obține toate proiectele asociate utilizatorului autentificat
     public List<Project> getAllProjects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -40,6 +41,7 @@ public class ProjectService {
         return projects;
     }
 
+    // Obține un proiect după ID, doar dacă utilizatorul este membru al echipei
     public Optional<Project> getProjectById(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -59,10 +61,12 @@ public class ProjectService {
         return Optional.empty();
     }
 
+    // Creează un nou proiect
     public Project createProject(Project project) {
         return projectRepository.save(project);
     }
 
+    // Actualizează un proiect existent
     public Project updateProject(Long id, Project projectDetails) {
         Optional<Project> optionalProject = projectRepository.findById(id);
         if (optionalProject.isPresent()) {
@@ -76,6 +80,7 @@ public class ProjectService {
         return null;
     }
 
+    // Șterge un proiect după ID
     public void deleteProject(Long id) {
         projectRepository.deleteById(id);
     }

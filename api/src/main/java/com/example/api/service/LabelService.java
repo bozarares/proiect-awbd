@@ -19,18 +19,22 @@ public class LabelService {
     @Autowired
     private TaskRepository taskRepository;
 
+    // Obține toate etichetele
     public List<Label> getAllLabels() {
         return labelRepository.findAll();
     }
 
+    // Obține o etichetă după ID
     public Label getLabelById(Long id) {
         return labelRepository.findById(id).orElse(null);
     }
 
+    // Creează o nouă etichetă
     public Label createLabel(Label label) {
         return labelRepository.save(label);
     }
 
+    // Actualizează o etichetă existentă
     public Label updateLabel(Long id, Label labelDetails) {
         Label label = labelRepository.findById(id).orElse(null);
         if (label != null) {
@@ -41,6 +45,7 @@ public class LabelService {
         return null;
     }
 
+    // Șterge o etichetă după ID și elimină referințele acesteia din taskuri
     public void deleteLabel(Long id) {
         Optional<Label> labelOptional = labelRepository.findById(id);
         if (labelOptional.isPresent()) {

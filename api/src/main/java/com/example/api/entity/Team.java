@@ -2,32 +2,38 @@ package com.example.api.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 
 @Entity
 public class Team {
+
+    // ID-ul unic al echipei
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Numele echipei
     @NotBlank(message = "Name is required")
     private String name;
 
+    // Descrierea echipei
     @NotBlank(message = "Description is required")
     private String description;
 
+    // Utilizatorul care a creat echipa (relație ManyToOne)
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Membrii echipei (relație OneToMany)
     @OneToMany(mappedBy = "team")
     private List<TeamMember> teamMembers;
 
+    // Proiectele echipei (relație OneToMany)
     @OneToMany(mappedBy = "team")
     private List<Project> projects;
 
-    // Getters and setters
+    // Getteri și setteri
 
     public Long getId() {
         return id;

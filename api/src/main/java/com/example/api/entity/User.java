@@ -2,28 +2,41 @@ package com.example.api.entity;
 
 import jakarta.persistence.*;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "\"user\"", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
+
+    // ID-ul unic al utilizatorului
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // Numele de utilizator
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
+    // Parola utilizatorului
+    @Column(nullable = false)
     private String password;
+
+    // Email-ul utilizatorului
+    @Column(nullable = false, unique = true)
     private String email;
+
+    // Rolul utilizatorului
     private String role;
 
+    // Comentariile scrise de utilizator (relație OneToMany)
     @OneToMany(mappedBy = "user")
     @JsonBackReference
     private List<Comment> comments;
 
-    // Getters and setters
+    // Getteri și setteri
 
     public Long getId() {
         return id;

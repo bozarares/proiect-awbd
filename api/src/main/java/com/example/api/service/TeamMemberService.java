@@ -24,18 +24,22 @@ public class TeamMemberService {
     @Autowired
     private TeamRepository teamRepository;
 
+    // Obține toți membrii echipei
     public List<TeamMember> getAllTeamMembers() {
         return teamMemberRepository.findAll();
     }
 
+    // Obține un membru al echipei după ID
     public TeamMember getTeamMemberById(Long id) {
         return teamMemberRepository.findById(id).orElse(null);
     }
 
+    // Creează un nou membru al echipei
     public TeamMember createTeamMember(TeamMember teamMember) {
         return teamMemberRepository.save(teamMember);
     }
 
+    // Actualizează un membru al echipei existent
     public TeamMember updateTeamMember(Long id, TeamMember teamMemberDetails) {
         TeamMember teamMember = teamMemberRepository.findById(id).orElse(null);
         if (teamMember != null) {
@@ -46,10 +50,12 @@ public class TeamMemberService {
         return null;
     }
 
+    // Șterge un membru al echipei după ID
     public void deleteTeamMember(Long id) {
         teamMemberRepository.deleteById(id);
     }
 
+    // Adaugă un membru al echipei după email
     public TeamMember addTeamMemberByEmail(Long teamId, String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {

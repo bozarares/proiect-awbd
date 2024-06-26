@@ -2,31 +2,36 @@ package com.example.api.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import java.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Comment {
+
+    // ID-ul unic al comentariului
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Conținutul comentariului
     @NotBlank(message = "Content Date is required")
     private String content;
+
+    // Data la care a fost creat comentariul
     private LocalDate createdDate;
 
+    // Utilizatorul care a scris comentariul (relație ManyToOne)
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Task-ul la care este asociat comentariul (relație ManyToOne)
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "task_id")
     private Task task;
 
-    // Getters and setters
+    // Getteri și setteri
 
     public Long getId() {
         return id;
