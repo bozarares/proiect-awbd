@@ -65,10 +65,10 @@ logs/
 Thumbs.db
 
 # Exclude application properties
-/src/main/resources/application.properties
-/src/main/resources/application-dev.properties
-/src/main/resources/application-prod.properties
-/src/main/resources/application-test.properties
+# /src/main/resources/application.properties
+# /src/main/resources/application-dev.properties
+# /src/main/resources/application-prod.properties
+# /src/main/resources/application-test.properties
 
 # Others
 *.bak
