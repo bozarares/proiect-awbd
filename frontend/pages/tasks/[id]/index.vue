@@ -1,6 +1,6 @@
 <template>
 	<div class="py-8 bg-gray-100 min-h-screen px-4 md:px-12">
-		<button @click="goBack" class="text-sm">Go Back</button>
+		<NuxtLink :to="`/projects/${task.project?.id}`" class="text-sm">Go Back</NuxtLink>
 		<div class="max-w-7xl mx-auto">
 			<div v-if="pendingTask || pendingComments" class="text-center">
 				<p>Loading...</p>
@@ -138,12 +138,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "~/stores/user";
 import { useAsyncData } from "#app";
 
-const router = useRouter()
 const route = useRoute();
 const userStore = useUserStore();
 const taskId = route.params.id;
@@ -154,14 +153,6 @@ const newLabelColor = ref("#000000");
 const comments = ref([]);
 const totalComments = ref(0);
 const currentPage = ref(0);
-
-const goBack = () => {
-  const projectId = task.value?.project?.id
-  if (projectId) {
-    router.push(`/projects/${projectId}`)
-  }
-}
-
 // Fetching task data
 const {
 	data: task,
@@ -253,7 +244,7 @@ const addComment = async () => {
 		if (error.value) {
 			console.error(error.value);
 		} else {
-			comments.value.push(data.value);
+			comments.value.unshift(data.value);
 			commentText.value = "";
 		}
 	} catch (error) {
